@@ -149,5 +149,14 @@
     "spawnmenu.common.load": "Load",
     "spawnmenu.common.items": "items",
 
+    "spawnmenu.mode.basewars": "Basewars",
+    "basewars.menu.eyebrow": "F4 Menu",
+    "basewars.menu.description": "Buy printers to generate money passively and dominate the area.",
+    "basewars.menu.buy_printer": "Buy Printer",
+    "basewars.menu.base": "Base",
+    "basewars.menu.stats": "Stats",
+    "basewars.menu.help": "Help",
+    "basewars.menu.hint": "Press F4 to close this menu.",
+
     "spawnmenu.mounts.error": "Error getting mount."
 }

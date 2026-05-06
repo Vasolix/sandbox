@@ -299,7 +299,7 @@ public sealed partial class Player : Component, Component.IDamageable, PlayerCon
 	{
 		if ( Input.UsingController )
 		{
-			Controller.UseInputControls = !(Input.Down( "SpawnMenu" ) || Input.Down( "InspectMenu" ));
+			Controller.UseInputControls = !SpawnMenuHost.IsOpen();
 		}
 		else
 		{

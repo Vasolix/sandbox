@@ -8,6 +8,11 @@
 
 <root>
     <div class="vitals">
+        <div class="stat money hud-panel">
+            <IconPanel class="icon" Text="payments" />
+            <label class="value">$@(DisplayMoney)</label>
+        </div>
+
         @if ( Player.Armour > 0 )
         {
             <div class="stat armour hud-panel">
@@ -50,6 +55,7 @@
     Player Player => Player.FindLocalPlayer();
     BaseWeapon Weapon => Player?.GetComponent<PlayerInventory>()?.ActiveWeapon as BaseWeapon;
 
+    int DisplayMoney => Player.PlayerData?.Money ?? 0;
     int DisplayHealth => (int)Player.Health;
     int DisplayArmour => (int)Player.Armour;
 
@@ -68,6 +74,6 @@
     {
         if ( !Player.IsValid() || Player.WantsHideHud ) return 0;
 
-        return System.HashCode.Combine( Player.Health, Player.Armour, Weapon?.ClipContents, Weapon?.ReserveAmmo );
+        return System.HashCode.Combine( DisplayMoney, Player.Health, Player.Armour, Weapon?.ClipContents, Weapon?.ReserveAmmo );
     }
 }

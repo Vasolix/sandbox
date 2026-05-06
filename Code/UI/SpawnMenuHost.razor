@@ -19,6 +19,7 @@
 {
     bool stickOpen = false;
     bool lastState;
+    bool baseWarsMenuOpen;
     string _lastMode = "SpawnMenu";
 
     PanelSwitcher PanelSwitcher = default;
@@ -29,7 +30,7 @@
         ScanForNewModes();
 
         var activeType = GetActiveMode()?.GetType().Name;
-        SetClass( "no-backdrop", activeType is "ContextMenuHost" or "SaveMenu" or "EffectsHost" );
+        SetClass( "no-backdrop", activeType is "ContextMenuHost" or "EffectsHost" );
 
         base.OnUpdate();
     }
@@ -38,11 +39,29 @@
     {
         var openSpawnMenu = Input.Down("spawnmenu");
         var openInspectMenu = Input.Down("inspectmenu");
-        var openAnyMenu = openSpawnMenu || openInspectMenu;
+
+        if ( IsBaseWarsMenuPressed() )
+        {
+            baseWarsMenuOpen = !baseWarsMenuOpen;
+            stickOpen = false;
+
+            if ( baseWarsMenuOpen )
+            {
+                SwitchMode( "BaseWarsMenu", false );
+                PanelSwitcher.SkipTransitions();
+            }
+        }
+
+        if ( Input.Pressed( "spawnmenu" ) || Input.Pressed( "inspectmenu" ) )
+        {
+            baseWarsMenuOpen = false;
+        }
+
+        var openAnyMenu = openSpawnMenu || openInspectMenu || baseWarsMenuOpen;
 
         stickOpen = stickOpen || (Sandbox.UI.InputFocus.Current?.Ancestors.Contains(Panel) ?? false);
 
-        if (stickOpen && Input.Pressed("spawnmenu")) stickOpen = false;
+        if (stickOpen && (Input.Pressed("spawnmenu") || IsBaseWarsMenuPressed())) stickOpen = false;
 
         bool state = stickOpen || openAnyMenu;
 
@@ -59,6 +78,12 @@
             // opened
             if (state)
             {
+                if (baseWarsMenuOpen)
+                {
+                    SwitchMode("BaseWarsMenu", false);
+                    PanelSwitcher.SkipTransitions();
+                }
+
                 if (Input.Pressed("inspectmenu"))
                 {
                     Hints.Current.Cancel("openinspectmenu");
@@ -78,7 +103,11 @@
         else if ( state )
         {
             // menu stays open — switch modes if the other key is pressed
-            if (Input.Pressed("inspectmenu"))
+            if (baseWarsMenuOpen)
+            {
+                SwitchMode("BaseWarsMenu", false);
+            }
+            else if (Input.Pressed("inspectmenu"))
             {
                 SwitchMode("ContextMenuHost", false);
             }
@@ -91,6 +120,14 @@
 
 
         lastState = state;
+    }
+
+    bool IsBaseWarsMenuPressed()
+    {
+        var actionPressed = Input.Pressed( "basewarsmenu" );
+        var keyboardPressed = Input.Keyboard.Pressed( "F4" );
+
+        return actionPressed || keyboardPressed;
     }
 
     // When clicking anywhere in the spawn menu, blur any focused text inputs
@@ -137,7 +174,7 @@
         var host = Game.ActiveScene.Get<SpawnMenuHost>();
         if (host?.PanelSwitcher == null) return;
 
-        if (remember) host._lastMode = modeName;
+        if (remember && modeName != "BaseWarsMenu") host._lastMode = modeName;
 
         foreach ( var child in host.PanelSwitcher.Children )
         {
@@ -154,6 +191,12 @@
         var host = Game.ActiveScene.Get<SpawnMenuHost>();
         if (host?.PanelSwitcher == null) return null;
         return host.PanelSwitcher.ActivePanel;
+    }
+
+    public static bool IsOpen()
+    {
+        var host = Game.ActiveScene.Get<SpawnMenuHost>();
+        return host?.Panel?.HasClass( "open" ) ?? false;
     }
 
     public interface ISpawnMenuCondition

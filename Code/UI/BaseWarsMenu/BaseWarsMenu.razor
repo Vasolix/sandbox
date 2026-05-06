@@ -1,0 +1,129 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Sandbox
+@inherits Panel
+@attribute [SpawnMenuHost.SpawnMenuMode]
+@attribute [Icon( "💰" )]
+@attribute [Title( "#spawnmenu.mode.basewars" )]
+@attribute [Order( -90 )]
+
+<root>
+	<div class="basewars-card">
+		<header>
+			<div class="left">
+				<div class="eyebrow">#basewars.menu.eyebrow</div>
+				<div class="title">Basewars</div>
+			</div>
+			<div class="money">
+				$@Money.ToString( "N0" )
+			</div>
+		</header>
+
+		<div class="description">
+			#basewars.menu.description
+		</div>
+
+		<div class="actions">
+			<button class="primary" onclick=@BuyPrinter>
+				<div class="label">#basewars.menu.buy_printer</div>
+				<div class="cost">$@PrinterCost</div>
+			</button>
+			<div class="button-group">
+				<button>#basewars.menu.base</button>
+				<button>#basewars.menu.stats</button>
+				<button>#basewars.menu.help</button>
+			</div>
+		</div>
+
+		<footer>
+			<div class="hint">#basewars.menu.hint</div>
+		</footer>
+	</div>
+</root>
+
+@code
+{
+	const int PrinterCost = 250;
+
+	int Money => Player.FindLocalPlayer()?.PlayerData?.Money ?? 0;
+
+	[Rpc.Host]
+	private static void BuyPrinter()
+	{
+		var player = Player.FindForConnection( Rpc.Caller );
+		if ( !player.IsValid() || !player.PlayerData.IsValid() ) return;
+		if ( !player.PlayerData.TrySpendMoney( PrinterCost ) )
+		{
+			Notices.SendNotice( player.Network.Owner, "payments", Color.Red, $"Pas assez d'argent. Il faut ${PrinterCost}.", 3 );
+			return;
+		}
+
+		var eyes = player.EyeTransform;
+		var trace = Game.SceneTrace.Ray( eyes.Position, eyes.Position + eyes.Forward * 2048 )
+			.IgnoreGameObject( player.GameObject )
+			.WithoutTags( "player" )
+			.Run();
+
+		var up = trace.Normal;
+		var backward = -eyes.Forward;
+		var right = Vector3.Cross( up, backward ).Normal;
+		var forward = Vector3.Cross( right, up ).Normal;
+		var rotation = Rotation.LookAt( forward, up );
+		var transform = new Transform( trace.EndPosition + up * 24f, rotation );
+
+		var go = new GameObject( false, "Money Printer" );
+		go.Tags.Add( "removable" );
+		go.WorldTransform = transform;
+
+		var renderer = go.AddComponent<ModelRenderer>();
+		renderer.Model = Model.Load( "models/dev/box.vmdl" );
+		renderer.MaterialOverride = Material.Load( "materials/dev/reflectivity_30.vmat" );
+		renderer.Tint = new Color( 0.2f, 0.85f, 0.45f );
+
+		var collider = go.AddComponent<BoxCollider>();
+		collider.Scale = new Vector3( 36f, 28f, 20f );
+		collider.Center = Vector3.Zero;
+
+		go.AddComponent<Rigidbody>();
+
+		var printer = go.AddComponent<BaseWarsPrinter>();
+		printer.OwnerData = player.PlayerData;
+
+		Ownable.Set( go, player.Network.Owner );
+		CreatePrinterDisplay( go );
+		go.NetworkSpawn( true, null );
+
+		Notices.SendNotice( player.Network.Owner, "shopping_cart", Color.Green, $"Printer achete pour ${PrinterCost}.", 3 );
+	}
+
+	private static void CreatePrinterDisplay( GameObject printer )
+	{
+		var screen = new GameObject( printer, false, "Printer Screen" );
+		screen.LocalPosition = new Vector3( 18.5f, 0f, 10f );
+		screen.LocalRotation = Rotation.FromYaw( 90f );
+		screen.LocalScale = new Vector3( 0.28f, 0.18f, 1f );
+
+		var panel = screen.AddComponent<ModelRenderer>();
+		panel.Model = Model.Load( "models/dev/plane_blend.vmdl" );
+		panel.MaterialOverride = Material.Load( "materials/dev/reflectivity_30.vmat" );
+		panel.Tint = Color.Black;
+
+		var text = new GameObject( screen, false, "Printer Screen Text" );
+		text.LocalPosition = new Vector3( 0f, 0f, 1f );
+
+		var textRenderer = text.AddComponent<TextRenderer>();
+		textRenderer.Text = "$0";
+		textRenderer.HorizontalAlignment = TextRenderer.HAlignment.Center;
+		textRenderer.VerticalAlignment = TextRenderer.VAlignment.Center;
+		textRenderer.FontFamily = "Poppins";
+		textRenderer.FontSize = 42f;
+		textRenderer.FontWeight = 800;
+		textRenderer.Scale = 0.25f;
+		textRenderer.Color = Color.Green;
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine( Money );
+	}
+}

@@ -1,0 +1,22 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Vbasewars",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "vbasewars",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": null,
+      "EditorReferences": null,
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "scenes/vbasewars.scene",
+        "ParentPackage": "404labs.vbasewars"
+      }
+    }
+  }
+}

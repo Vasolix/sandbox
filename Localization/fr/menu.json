@@ -135,5 +135,14 @@
   "spawnmenu.effects.save_preset_prompt": "Entrez un nom pour ce préréglage d'effets.",
   "spawnmenu.effects.no_properties": "Aucune propriété modifiable.",
   "spawnmenu.common.load": "Charger",
+  "spawnmenu.mode.basewars": "Basewars",
+  "basewars.menu.eyebrow": "Menu F4",
+  "basewars.menu.description": "Achetez des générateurs pour gagner de l'argent passivement et dominer la zone.",
+  "basewars.menu.buy_printer": "Acheter Printer",
+  "basewars.menu.base": "Base",
+  "basewars.menu.stats": "Stats",
+  "basewars.menu.help": "Aide",
+  "basewars.menu.hint": "Appuyez sur F4 pour fermer ce menu.",
+
   "spawnmenu.effects.select_effect": "Sélectionnez un effet pour modifier ses propriétés."
 }

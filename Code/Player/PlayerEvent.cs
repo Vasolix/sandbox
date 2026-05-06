@@ -146,4 +146,12 @@ public static partial class Global
 		void OnPlayerRespawning( PlayerRespawnEvent e ) { }
 		void OnPlayerKill( PlayerKillEvent e ) { }
 	}
+
+	public interface ISaveEvents : ISceneEvent<ISaveEvents>
+	{
+		void BeforeSave( string filename ) { }
+		void AfterSave( string filename ) { }
+		void BeforeLoad( string filename ) { }
+		void AfterLoad( string filename ) { }
+	}
 }

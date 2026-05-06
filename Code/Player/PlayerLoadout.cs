@@ -288,45 +288,4 @@ public sealed class PlayerLoadout : Component, Local.IPlayerEvents, Global.IPlay
 		await Task.Yield();
 		SaveLoadout();
 	}
-
-	void Global.ISaveEvents.BeforeSave( string filename )
-	{
-		if ( !Networking.IsHost ) return;
-
-		var steamId = Player.SteamId;
-		if ( steamId == 0 ) return;
-
-		var json = SerializeLoadout();
-		if ( string.IsNullOrEmpty( json ) ) return;
-
-		SaveSystem.Current?.SetMetadata( $"Loadout_{steamId}", json );
-	}
-
-	void Global.ISaveEvents.AfterLoad( string filename )
-	{
-		if ( !Networking.IsHost ) return;
-
-		var steamId = Player.SteamId;
-		if ( steamId == 0 ) return;
-
-		var json = SaveSystem.Current?.GetMetadata( $"Loadout_{steamId}" );
-		if ( string.IsNullOrEmpty( json ) ) return;
-
-		_ = RestoreLoadoutFromSaveAsync( json );
-	}
-
-	private async Task RestoreLoadoutFromSaveAsync( string json )
-	{
-		foreach ( var weapon in Inventory.Weapons.ToList() )
-			weapon.DestroyGameObject();
-
-		await Task.Yield();
-
-		await EnsureMountedAsync( json );
-		GiveLoadoutWeapons( json );
-
-		var best = Inventory.GetBestWeapon();
-		if ( best.IsValid() )
-			Inventory.SwitchWeapon( best );
-	}
 }

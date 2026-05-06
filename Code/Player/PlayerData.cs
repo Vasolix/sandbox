@@ -12,6 +12,7 @@ public sealed partial class PlayerData : Component, Global.ISaveEvents
 
 	[Sync] public int Kills { get; set; }
 	[Sync] public int Deaths { get; set; }
+	[Sync] public int Money { get; private set; } = 500;
 
 	[Sync] public bool IsGodMode { get; set; }
 
@@ -45,6 +46,24 @@ public sealed partial class PlayerData : Component, Global.ISaveEvents
 	public static PlayerData For( Guid playerId )
 	{
 		return All.FirstOrDefault( x => x.PlayerId == playerId );
+	}
+
+	public void AddMoney( int amount )
+	{
+		Assert.True( Networking.IsHost, "PlayerData.AddMoney is host-only!" );
+		if ( amount <= 0 ) return;
+
+		Money = Math.Max( 0, Money + amount );
+	}
+
+	public bool TrySpendMoney( int amount )
+	{
+		Assert.True( Networking.IsHost, "PlayerData.TrySpendMoney is host-only!" );
+		if ( amount <= 0 ) return true;
+		if ( Money < amount ) return false;
+
+		Money -= amount;
+		return true;
 	}
 
 	// Host-side respawn tracking. No sync required.

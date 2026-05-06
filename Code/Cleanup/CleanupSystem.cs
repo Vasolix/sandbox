@@ -36,18 +36,6 @@ public sealed class CleanupSystem : GameObjectSystem<CleanupSystem>, ISceneLoadi
 	{
 	}
 
-	/// <summary>
-	/// Call from SaveSystem before Game.ChangeScene() to snapshot the current baseline
-	/// </summary>
-	public static void PreserveBaselineForSaveLoad()
-	{
-		if ( Current is null || !Current.HasBaseline ) return;
-
-		_restorePersistedBaseline = true;
-		_persistedBaselineIds = new HashSet<Guid>( Current._baselineObjectIds );
-		_persistedBaselineData = new Dictionary<Guid, string>( Current._baselineObjectData );
-	}
-
 	void ISceneLoadingEvents.BeforeLoad( Scene scene, SceneLoadOptions options )
 	{
 		// Clear any existing baseline when a new scene is loading

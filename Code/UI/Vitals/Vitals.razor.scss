@@ -22,6 +22,16 @@ Vitals
 			min-width: 150px;
 			justify-content: center;
 		}
+
+		.money
+		{
+			background-color: rgba( 20, 95, 52, 0.72 );
+
+			.icon
+			{
+				background-tint: #7dffad;
+			}
+		}
 	}
 
 	.ammo
