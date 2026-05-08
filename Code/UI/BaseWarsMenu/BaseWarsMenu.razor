@@ -10,28 +10,66 @@
 <root>
 	<div class="basewars-card">
 		<header>
-			<div class="left">
-				<div class="eyebrow">#basewars.menu.eyebrow</div>
-				<div class="title">Basewars</div>
+			<div class="profile-section">
+				<div class="avatar">
+					<img src="avatar:@Me?.SteamId" />
+				</div>
+				<div class="info">
+					<div class="pseudo">@Pseudo</div>
+					<div class="level-container">
+						<div class="level-badge">#basewars.menu.level @Level</div>
+						<div class="xp-bar">
+							<div class="fill" style="width: @( ( (float)Experience / ExperienceRequired ) * 100 )%"></div>
+							<div class="text">@Experience / @ExperienceRequired #basewars.menu.xp</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="money">
 				$@Money.ToString( "N0" )
 			</div>
 		</header>
 
-		<div class="description">
-			#basewars.menu.description
-		</div>
+		<div class="main-content">
+			<div class="left-panel">
+				<div class="section-title">#basewars.menu.printers</div>
+				<div class="printer-list">
+					@if ( !MyPrinters.Any() )
+					{
+						<div class="empty-msg">#basewars.menu.no_printers</div>
+					}
+					else
+					{
+						@foreach ( var printer in MyPrinters )
+						{
+							<div class="printer-row">
+								<div class="icon">🎰</div>
+								<div class="details">
+									<div class="name">Money Printer</div>
+									<div class="stored">#basewars.menu.stored: $@printer.StoredMoney</div>
+								</div>
+							</div>
+						}
+					}
+				</div>
+			</div>
 
-		<div class="actions">
-			<button class="primary" onclick=@BuyPrinter>
-				<div class="label">#basewars.menu.buy_printer</div>
-				<div class="cost">$@PrinterCost</div>
-			</button>
-			<div class="button-group">
-				<button>#basewars.menu.base</button>
-				<button>#basewars.menu.stats</button>
-				<button>#basewars.menu.help</button>
+			<div class="right-panel">
+				<div class="description">
+					#basewars.menu.description
+				</div>
+
+				<div class="actions">
+					<button class="primary" onclick=@BuyPrinter>
+						<div class="label">#basewars.menu.buy_printer</div>
+						<div class="cost">$@PrinterCost</div>
+					</button>
+					<div class="button-group">
+						<button>#basewars.menu.base</button>
+						<button>#basewars.menu.stats</button>
+						<button>#basewars.menu.help</button>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -45,7 +83,14 @@
 {
 	const int PrinterCost = 250;
 
-	int Money => Player.FindLocalPlayer()?.PlayerData?.Money ?? 0;
+	PlayerData Me => Player.FindLocalPlayer()?.PlayerData;
+	int Money => Me?.Money ?? 0;
+	int Level => Me?.Level ?? 1;
+	int Experience => Me?.Experience ?? 0;
+	int ExperienceRequired => Me?.ExperienceRequired ?? 1000;
+	string Pseudo => Me?.DisplayName ?? "Player";
+
+	IEnumerable<BaseWarsPrinter> MyPrinters => Game.ActiveScene.GetAll<BaseWarsPrinter>().Where( x => x.OwnerData == Me );
 
 	[Rpc.Host]
 	private static void BuyPrinter()
@@ -124,6 +169,6 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( Money );
+		return HashCode.Combine( Money, Experience, Level, MyPrinters.Count() );
 	}
 }

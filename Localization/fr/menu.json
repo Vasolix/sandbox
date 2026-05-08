@@ -143,6 +143,12 @@
   "basewars.menu.stats": "Stats",
   "basewars.menu.help": "Aide",
   "basewars.menu.hint": "Appuyez sur F4 pour fermer ce menu.",
+  "basewars.menu.level": "Niveau",
+  "basewars.menu.xp": "XP",
+  "basewars.menu.printers": "Mes Printers",
+  "basewars.menu.no_printers": "Vous n'avez pas encore de printers.",
+  "basewars.menu.stored": "Stocké",
+  "basewars.menu.collect": "Récupérer",
 
   "spawnmenu.effects.select_effect": "Sélectionnez un effet pour modifier ses propriétés."
 }

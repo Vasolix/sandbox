@@ -54,7 +54,7 @@
           "OwnerTransfer": 1,
           "Components": [
             {
-              "__type": "Sandbox.UI.Inventory.Inventory",
+              "__type": "Sandbox.Inventory",
               "__guid": "914de9bf-f622-410e-9e7d-d4f931dbaf6c",
               "__enabled": true,
               "Flags": 0,
@@ -117,7 +117,7 @@
           "OwnerTransfer": 1,
           "Components": [
             {
-              "__type": "Sandbox.UI.Chat",
+              "__type": "Sandbox.Chat",
               "__guid": "9eba23b9-74cc-4d75-9f32-615a2060759c",
               "__enabled": true,
               "Flags": 0,
@@ -148,7 +148,7 @@
           "OwnerTransfer": 1,
           "Components": [
             {
-              "__type": "Sandbox.UI.Scoreboard",
+              "__type": "Sandbox.Scoreboard",
               "__guid": "32e5d35e-d6ea-492c-836f-f90910c7621a",
               "__enabled": true,
               "Flags": 0,
@@ -623,7 +623,7 @@
           "ZNear": 1
         },
         {
-          "__type": "CameraSetup",
+          "__type": "Sandbox.CameraSetup",
           "__guid": "49f96722-638d-49d2-8e93-8c97628e1586",
           "__enabled": true,
           "Flags": 0,

@@ -1,20 +1,21 @@
-
-/// <summary>
-/// Creates a bunch of callbacks, allowing finer control over applying camera effects
-/// </summary>
-public sealed class CameraSetup : Component
+namespace Sandbox
 {
-	protected override void OnPreRender()
+	/// <summary>
+	/// Creates a bunch of callbacks, allowing finer control over applying camera effects
+	/// </summary>
+	public sealed class CameraSetup : Component
 	{
-		var cc = GetComponent<CameraComponent>();
-		if ( cc is null ) return;
+		protected override void OnPreRender()
+		{
+			var cc = GetComponent<CameraComponent>();
+			if ( cc is null ) return;
 
-		ICameraSetup.Post( x => x.PreSetup( cc ) );
-		ICameraSetup.Post( x => x.Setup( cc ) );
-		ICameraSetup.Post( x => x.PostSetup( cc ) );
+			ICameraSetup.Post( x => x.PreSetup( cc ) );
+			ICameraSetup.Post( x => x.Setup( cc ) );
+			ICameraSetup.Post( x => x.PostSetup( cc ) );
+		}
 	}
 }
-
 
 public interface ICameraSetup : ISceneEvent<ICameraSetup>
 {

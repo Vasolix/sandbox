@@ -157,6 +157,12 @@
     "basewars.menu.stats": "Stats",
     "basewars.menu.help": "Help",
     "basewars.menu.hint": "Press F4 to close this menu.",
+    "basewars.menu.level": "Level",
+    "basewars.menu.xp": "XP",
+    "basewars.menu.printers": "My Printers",
+    "basewars.menu.no_printers": "You don't have any printers yet.",
+    "basewars.menu.stored": "Stored",
+    "basewars.menu.collect": "Collect",
 
     "spawnmenu.mounts.error": "Error getting mount."
 }

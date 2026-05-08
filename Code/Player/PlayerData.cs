@@ -13,6 +13,10 @@ public sealed partial class PlayerData : Component, Global.ISaveEvents
 	[Sync] public int Kills { get; set; }
 	[Sync] public int Deaths { get; set; }
 	[Sync] public int Money { get; private set; } = 500;
+	[Sync] public int Level { get; private set; } = 1;
+	[Sync] public int Experience { get; private set; } = 0;
+
+	public int ExperienceRequired => Level * 1000;
 
 	[Sync] public bool IsGodMode { get; set; }
 
@@ -128,6 +132,22 @@ public sealed partial class PlayerData : Component, Global.ISaveEvents
 		using ( Rpc.FilterInclude( Connection ) )
 		{
 			RpcAddStat( identifier, amount );
+		}
+	}
+
+	public void AddExperience( int amount )
+	{
+		Assert.True( Networking.IsHost, "PlayerData.AddExperience is host-only!" );
+		if ( amount <= 0 ) return;
+
+		Experience += amount;
+
+		while ( Experience >= ExperienceRequired )
+		{
+			Experience -= ExperienceRequired;
+			Level++;
+
+			Sandbox.UI.Notices.SendNotice( Connection, "star", Color.Yellow, $"Niveau superieur ! Tu es maintenant niveau {Level}.", 5 );
 		}
 	}
 
