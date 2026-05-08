@@ -1,24 +1,32 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
+@using Sandbox.Npcs.CombatNpc;
+@using Sandbox.Npcs.Rollermine;
+@using Sandbox.Npcs.Scientist;
 @inherits PanelComponent
 @namespace Sandbox
 
 <root>
 	<div class="owner-label hud-panel">
 		<label class="name">Owned by @_ownerName</label>
+		@if ( _health is not null )
+		{
+			<label class="health">@($"{_health:0.#} HP")</label>
+		}
 	</div>
 </root>
 
 @code
 {
-    string _ownerName;
+	string _ownerName;
+	float? _health;
 
-    Player Player => Player.FindLocalPlayer();
+	Player Player => Player.FindLocalPlayer();
 
 	protected override void OnUpdate()
 	{
 		var camera = Scene.Camera;
-        if (camera is null || (Player.IsValid() && Player.WantsHideHud) )
+		if ( camera is null || (Player.IsValid() && Player.WantsHideHud) )
 		{
 			Panel.SetClass( "visible", false );
 			return;
@@ -35,6 +43,7 @@
 			if ( ownable.IsValid() && ownable.Owner is not null )
 			{
 				_ownerName = ownable.Owner.DisplayName;
+				_health = FindHealth( tr.GameObject, ownable.GameObject );
 				Panel.SetClass( "visible", true );
 				return;
 			}
@@ -43,5 +52,45 @@
 		Panel.SetClass( "visible", false );
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( _ownerName );
+	protected override int BuildHash() => System.HashCode.Combine( _ownerName, _health );
+
+	static float? FindHealth( GameObject hitObject, GameObject ownedObject )
+	{
+		var prop = hitObject.GetComponentInParent<Prop>( true );
+		if ( prop.IsValid() && prop.Health > 0f )
+			return prop.Health;
+
+		prop = ownedObject.GetComponent<Prop>();
+		if ( prop.IsValid() && prop.Health > 0f )
+			return prop.Health;
+
+		if ( TryFindComponentHealth( hitObject, out var hitHealth ) )
+			return hitHealth;
+
+		if ( hitObject != ownedObject && TryFindComponentHealth( ownedObject, out var ownedHealth ) )
+			return ownedHealth;
+
+		return null;
+	}
+
+	static bool TryFindComponentHealth( GameObject go, out float health )
+	{
+		foreach ( var component in go.Components.GetAll() )
+		{
+			health = component switch
+			{
+				BaseWarsPrinter printer => printer.Health,
+				CombatNpc npc => npc.Health,
+				RollermineNpc npc => npc.Health,
+				ScientistNpc npc => npc.Health,
+				_ => 0f
+			};
+
+			if ( health > 0f )
+				return true;
+		}
+
+		health = 0f;
+		return false;
+	}
 }

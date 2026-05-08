@@ -36,7 +36,7 @@
 @code
 {
     TypeDescription SelectedPageType { get; set; }
-    Panel PageContainer;
+    Panel PageContainer = null;
     UtilityPage ActivePage;
 
     IEnumerable<TypeDescription> GetVisiblePages()

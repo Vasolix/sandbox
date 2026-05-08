@@ -24,8 +24,8 @@ public sealed class CleanupSystem : GameObjectSystem<CleanupSystem>, ISceneLoadi
 	private readonly Dictionary<Guid, string> _baselineObjectData = new();
 
 	private static bool _restorePersistedBaseline;
-	private static HashSet<Guid> _persistedBaselineIds;
-	private static Dictionary<Guid, string> _persistedBaselineData;
+	private static HashSet<Guid> _persistedBaselineIds = new();
+	private static Dictionary<Guid, string> _persistedBaselineData = new();
 
 	/// <summary>
 	/// Whether a baseline has been captured.

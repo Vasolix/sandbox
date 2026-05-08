@@ -1,5 +1,5 @@
 /// <summary>
-/// A TV screen entity that displays the feed from a linked <see cref="CameraEntity"/>.
+/// A TV screen entity that displays the feed from a linked camera.
 /// Use the Linker tool to connect a Camera to this TV.
 /// </summary>
 public class TVEntity : Component

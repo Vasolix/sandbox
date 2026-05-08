@@ -17,9 +17,10 @@ OwnerLabel
 
 	.owner-label
 	{
-		flex-direction: row;
+		flex-direction: column;
 		align-items: center;
 		padding: 10px 14px;
+		gap: 2px;
 
 		.name
 		{
@@ -27,6 +28,14 @@ OwnerLabel
 			font-weight: 600;
 			font-family: $title-font;
 			color: $hud-text;
+		}
+
+		.health
+		{
+			font-size: 10px;
+			font-weight: 700;
+			font-family: $title-font;
+			color: #ef4444;
 		}
 	}
 }

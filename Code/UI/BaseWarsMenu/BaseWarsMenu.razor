@@ -34,19 +34,20 @@
 			<div class="left-panel">
 				<div class="section-title">#basewars.menu.printers</div>
 				<div class="printer-list">
-					@if ( !MyPrinters.Any() )
+					@if ( !OwnedPrinters.Any() )
 					{
 						<div class="empty-msg">#basewars.menu.no_printers</div>
 					}
 					else
 					{
-						@foreach ( var printer in MyPrinters )
+						@foreach ( var printer in OwnedPrinters )
 						{
 							<div class="printer-row">
-								<div class="icon">🎰</div>
+								<div class="icon" style="background-color: @printer.Definition.ColorCss">@printer.Definition.Icon</div>
 								<div class="details">
-									<div class="name">Money Printer</div>
-									<div class="stored">#basewars.menu.stored: $@printer.StoredMoney</div>
+									<div class="name">@printer.Definition.Name</div>
+									<div class="stored">#basewars.menu.stored: $@printer.Printer.StoredMoney</div>
+									<div class="meta">$@printer.Definition.PrintAmount / @printer.Definition.PrintInterval.ToString( "0.#" )s | @printer.Definition.Health.ToString( "0" ) HP</div>
 								</div>
 							</div>
 						}
@@ -60,14 +61,36 @@
 				</div>
 
 				<div class="actions">
-					<button class="primary" onclick=@BuyPrinter>
-						<div class="label">#basewars.menu.buy_printer</div>
-						<div class="cost">$@PrinterCost</div>
-					</button>
-					<div class="button-group">
-						<button>#basewars.menu.base</button>
-						<button>#basewars.menu.stats</button>
-						<button>#basewars.menu.help</button>
+					<div class="shop-grid">
+						@foreach ( var printerDefinition in PrinterDefinitions )
+						{
+							<div class="shop-card">
+								<div class="shop-head">
+									<div class="shop-icon" style="background-color: @printerDefinition.ColorCss">@printerDefinition.Icon</div>
+									<div class="shop-title">
+										<div class="name">@printerDefinition.Name</div>
+										<div class="cost">$@printerDefinition.Cost.ToString( "N0" )</div>
+									</div>
+								</div>
+								<div class="stats-grid">
+									<div>
+										<label>#basewars.menu.production</label>
+										<span>$@printerDefinition.PrintAmount</span>
+									</div>
+									<div>
+										<label>#basewars.menu.interval</label>
+										<span>@printerDefinition.PrintInterval.ToString( "0.#" )s</span>
+									</div>
+									<div>
+										<label>#basewars.menu.health</label>
+										<span>@printerDefinition.Health.ToString( "0" ) HP</span>
+									</div>
+								</div>
+								<button class="primary" onclick=@( () => BuyPrinter( printerDefinition.Id ) )>
+									<div class="label">#basewars.menu.buy_printer</div>
+								</button>
+							</div>
+						}
 					</div>
 				</div>
 			</div>
@@ -81,7 +104,64 @@
 
 @code
 {
-	const int PrinterCost = 250;
+	private sealed class PrinterDefinition
+	{
+		public string Id { get; init; }
+		public string Name { get; init; }
+		public string Icon { get; init; }
+		public int Cost { get; init; }
+		public int PrintAmount { get; init; }
+		public float PrintInterval { get; init; }
+		public float Health { get; init; }
+		public Color Tint { get; init; }
+		public string ColorCss { get; init; }
+	}
+
+	private sealed class OwnedPrinterView
+	{
+		public BaseWarsPrinter Printer { get; init; }
+		public PrinterDefinition Definition { get; init; }
+	}
+
+	static readonly IReadOnlyList<PrinterDefinition> PrinterDefinitions = new List<PrinterDefinition>
+	{
+		new()
+		{
+			Id = "starter",
+			Name = "Starter Printer",
+			Icon = "1",
+			Cost = 250,
+			PrintAmount = 25,
+			PrintInterval = 5f,
+			Health = 100f,
+			Tint = new Color( 0.2f, 0.85f, 0.45f ),
+			ColorCss = "#22c55e"
+		},
+		new()
+		{
+			Id = "industrial",
+			Name = "Industrial Printer",
+			Icon = "2",
+			Cost = 750,
+			PrintAmount = 60,
+			PrintInterval = 4f,
+			Health = 140f,
+			Tint = new Color( 0.95f, 0.62f, 0.16f ),
+			ColorCss = "#f59e0b"
+		},
+		new()
+		{
+			Id = "quantum",
+			Name = "Quantum Printer",
+			Icon = "3",
+			Cost = 1800,
+			PrintAmount = 150,
+			PrintInterval = 3f,
+			Health = 180f,
+			Tint = new Color( 0.56f, 0.42f, 0.95f ),
+			ColorCss = "#8b5cf6"
+		}
+	};
 
 	PlayerData Me => Player.FindLocalPlayer()?.PlayerData;
 	int Money => Me?.Money ?? 0;
@@ -91,15 +171,18 @@
 	string Pseudo => Me?.DisplayName ?? "Player";
 
 	IEnumerable<BaseWarsPrinter> MyPrinters => Game.ActiveScene.GetAll<BaseWarsPrinter>().Where( x => x.OwnerData == Me );
+	IReadOnlyList<OwnedPrinterView> OwnedPrinters => MyPrinters.Select( x => new OwnedPrinterView { Printer = x, Definition = GetPrinterDefinition( x.PrinterTypeId ) } ).ToList();
 
 	[Rpc.Host]
-	private static void BuyPrinter()
+	private static void BuyPrinter( string printerTypeId )
 	{
 		var player = Player.FindForConnection( Rpc.Caller );
 		if ( !player.IsValid() || !player.PlayerData.IsValid() ) return;
-		if ( !player.PlayerData.TrySpendMoney( PrinterCost ) )
+
+		var definition = GetPrinterDefinition( printerTypeId );
+		if ( !player.PlayerData.TrySpendMoney( definition.Cost ) )
 		{
-			Notices.SendNotice( player.Network.Owner, "payments", Color.Red, $"Pas assez d'argent. Il faut ${PrinterCost}.", 3 );
+			Notices.SendNotice( player.Network.Owner, "payments", Color.Red, $"Pas assez d'argent. Il faut ${definition.Cost}.", 3 );
 			return;
 		}
 
@@ -116,14 +199,14 @@
 		var rotation = Rotation.LookAt( forward, up );
 		var transform = new Transform( trace.EndPosition + up * 24f, rotation );
 
-		var go = new GameObject( false, "Money Printer" );
+		var go = new GameObject( false, definition.Name );
 		go.Tags.Add( "removable" );
 		go.WorldTransform = transform;
 
 		var renderer = go.AddComponent<ModelRenderer>();
 		renderer.Model = Model.Load( "models/dev/box.vmdl" );
 		renderer.MaterialOverride = Material.Load( "materials/dev/reflectivity_30.vmat" );
-		renderer.Tint = new Color( 0.2f, 0.85f, 0.45f );
+		renderer.Tint = definition.Tint;
 
 		var collider = go.AddComponent<BoxCollider>();
 		collider.Scale = new Vector3( 36f, 28f, 20f );
@@ -133,12 +216,16 @@
 
 		var printer = go.AddComponent<BaseWarsPrinter>();
 		printer.OwnerData = player.PlayerData;
+		printer.PrinterTypeId = definition.Id;
+		printer.PrintAmount = definition.PrintAmount;
+		printer.PrintInterval = definition.PrintInterval;
+		printer.Health = definition.Health;
 
 		Ownable.Set( go, player.Network.Owner );
 		CreatePrinterDisplay( go );
 		go.NetworkSpawn( true, null );
 
-		Notices.SendNotice( player.Network.Owner, "shopping_cart", Color.Green, $"Printer achete pour ${PrinterCost}.", 3 );
+		Notices.SendNotice( player.Network.Owner, "shopping_cart", Color.Green, $"{definition.Name} achete pour ${definition.Cost}.", 3 );
 	}
 
 	private static void CreatePrinterDisplay( GameObject printer )
@@ -169,6 +256,11 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( Money, Experience, Level, MyPrinters.Count() );
+		return HashCode.Combine( Money, Experience, Level, MyPrinters.Count(), MyPrinters.Sum( x => x.StoredMoney ) );
+	}
+
+	private static PrinterDefinition GetPrinterDefinition( string printerTypeId )
+	{
+		return PrinterDefinitions.FirstOrDefault( x => x.Id == printerTypeId ) ?? PrinterDefinitions[0];
 	}
 }

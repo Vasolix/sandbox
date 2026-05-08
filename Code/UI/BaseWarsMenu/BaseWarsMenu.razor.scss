@@ -16,11 +16,12 @@ BaseWarsMenu
 
 BaseWarsMenu .basewars-card
 {
-	width: 900px;
-	padding: 48px;
+	width: 1180px;
+	max-height: 860px;
+	padding: 36px;
 	flex-direction: column;
-	gap: 32px;
-	border-radius: 32px;
+	gap: 28px;
+	border-radius: 8px;
 	background-color: rgba( 15, 23, 42, 0.95 );
 	border: 1px solid rgba( 255, 255, 255, 0.08 );
 	box-shadow: 0 32px 64px -12px rgba( 0, 0, 0, 0.6 );
@@ -46,7 +47,7 @@ BaseWarsMenu .avatar
 {
 	width: 80px;
 	height: 80px;
-	border-radius: 20px;
+	border-radius: 8px;
 	overflow: hidden;
 	background-color: rgba( 255, 255, 255, 0.05 );
 	border: 1px solid rgba( 255, 255, 255, 0.1 );
@@ -126,7 +127,7 @@ BaseWarsMenu .xp-bar
 BaseWarsMenu .money
 {
 	padding: 16px 28px;
-	border-radius: 20px;
+	border-radius: 8px;
 	background-color: rgba( 34, 197, 94, 0.15 );
 	color: #4ade80;
 	font-size: 32px;
@@ -138,12 +139,12 @@ BaseWarsMenu .money
 BaseWarsMenu .main-content
 {
 	flex-direction: row;
-	gap: 40px;
+	gap: 28px;
 }
 
 BaseWarsMenu .left-panel
 {
-	flex: 1;
+	width: 360px;
 	flex-direction: column;
 	gap: 16px;
 }
@@ -152,7 +153,7 @@ BaseWarsMenu .right-panel
 {
 	flex: 1;
 	flex-direction: column;
-	gap: 24px;
+	gap: 20px;
 }
 
 BaseWarsMenu .section-title
@@ -168,7 +169,7 @@ BaseWarsMenu .printer-list
 {
 	flex-direction: column;
 	gap: 8px;
-	max-height: 300px;
+	max-height: 540px;
 	overflow-y: auto;
 }
 
@@ -176,20 +177,29 @@ BaseWarsMenu .printer-row
 {
 	flex-direction: row;
 	align-items: center;
-	padding: 16px;
+	padding: 14px;
 	background-color: rgba( 255, 255, 255, 0.03 );
-	border-radius: 12px;
-	gap: 16px;
+	border-radius: 8px;
+	gap: 12px;
 	border: 1px solid rgba( 255, 255, 255, 0.03 );
 
 	.icon
 	{
-		font-size: 24px;
+		width: 38px;
+		height: 38px;
+		border-radius: 8px;
+		color: white;
+		font-size: 18px;
+		font-weight: 900;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.details
 	{
+		flex: 1;
 		flex-direction: column;
+		gap: 2px;
 	}
 
 	.name
@@ -203,6 +213,13 @@ BaseWarsMenu .printer-row
 	{
 		color: #4ade80;
 		font-size: 14px;
+		font-weight: 600;
+	}
+
+	.meta
+	{
+		color: rgba( 255, 255, 255, 0.35 );
+		font-size: 12px;
 		font-weight: 600;
 	}
 }
@@ -219,34 +236,117 @@ BaseWarsMenu .empty-msg
 BaseWarsMenu .description
 {
 	color: rgba( 255, 255, 255, 0.6 );
-	font-size: 18px;
-	line-height: 1.6;
+	font-size: 16px;
+	line-height: 1.45;
 }
 
 BaseWarsMenu .actions
 {
 	flex-direction: column;
-	gap: 24px;
+	gap: 16px;
 }
 
-BaseWarsMenu .button-group
+BaseWarsMenu .shop-grid
 {
 	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+
+BaseWarsMenu .shop-card
+{
+	width: 246px;
+	min-height: 258px;
+	padding: 16px;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 14px;
+	border-radius: 8px;
+	background-color: rgba( 255, 255, 255, 0.04 );
+	border: 1px solid rgba( 255, 255, 255, 0.06 );
+}
+
+BaseWarsMenu .shop-head
+{
+	flex-direction: row;
+	align-items: center;
 	gap: 12px;
+}
+
+BaseWarsMenu .shop-icon
+{
+	width: 46px;
+	height: 46px;
+	border-radius: 8px;
+	color: white;
+	font-size: 22px;
+	font-weight: 900;
+	align-items: center;
+	justify-content: center;
+}
+
+BaseWarsMenu .shop-title
+{
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+
+	.name
+	{
+		color: white;
+		font-size: 17px;
+		font-weight: 800;
+	}
+
+	.cost
+	{
+		color: #4ade80;
+		font-size: 15px;
+		font-weight: 800;
+	}
+}
+
+BaseWarsMenu .stats-grid
+{
+	flex-direction: column;
+	gap: 8px;
+
+	> div
+	{
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding: 8px 0;
+		border-bottom: 1px solid rgba( 255, 255, 255, 0.05 );
+	}
+
+	label
+	{
+		color: rgba( 255, 255, 255, 0.45 );
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	span
+	{
+		color: rgba( 255, 255, 255, 0.9 );
+		font-size: 14px;
+		font-weight: 800;
+	}
 }
 
 BaseWarsMenu button
 {
-	padding: 20px 24px;
-	border-radius: 16px;
+	padding: 14px 18px;
+	border-radius: 8px;
 	background-color: rgba( 255, 255, 255, 0.05 );
 	color: rgba( 255, 255, 255, 0.9 );
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 700;
 	cursor: pointer;
 	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 	border: 1px solid rgba( 255, 255, 255, 0.05 );
-	min-width: 140px;
 	justify-content: center;
 }
 
@@ -262,10 +362,10 @@ BaseWarsMenu button.primary
 	background-color: $color-accent;
 	color: white;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
-	padding: 24px 32px;
-	font-size: 22px;
+	padding: 14px 18px;
+	font-size: 15px;
 	box-shadow: 0 10px 15px -3px rgba( 0, 148, 255, 0.3 );
 }
 
@@ -275,17 +375,10 @@ BaseWarsMenu button.primary:hover
 	box-shadow: 0 20px 25px -5px rgba( 0, 148, 255, 0.4 );
 }
 
-BaseWarsMenu button.primary .cost
-{
-	opacity: 0.8;
-	font-weight: 500;
-	font-size: 18px;
-}
-
 BaseWarsMenu footer
 {
-	margin-top: 24px;
-	padding-top: 24px;
+	margin-top: 4px;
+	padding-top: 20px;
 	border-top: 1px solid rgba( 255, 255, 255, 0.05 );
 }
 

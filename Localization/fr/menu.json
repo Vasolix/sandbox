@@ -149,6 +149,9 @@
   "basewars.menu.no_printers": "Vous n'avez pas encore de printers.",
   "basewars.menu.stored": "Stocké",
   "basewars.menu.collect": "Récupérer",
+  "basewars.menu.production": "Production",
+  "basewars.menu.interval": "Intervalle",
+  "basewars.menu.health": "Vie",
 
   "spawnmenu.effects.select_effect": "Sélectionnez un effet pour modifier ses propriétés."
 }

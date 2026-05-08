@@ -7,6 +7,9 @@ public sealed class BaseWarsPrinter : Component, Component.IDamageable, Componen
 	[Property, Sync( SyncFlags.FromHost )]
 	public int StoredMoney { get; private set; }
 
+	[Property, Sync( SyncFlags.FromHost )]
+	public string PrinterTypeId { get; set; } = "starter";
+
 	[Property, Range( 1, 1000 ), Step( 1 )]
 	public int PrintAmount { get; set; } = 25;
 
