@@ -174,7 +174,7 @@
         var host = Game.ActiveScene.Get<SpawnMenuHost>();
         if (host?.PanelSwitcher == null) return;
 
-        if (remember && modeName != "BaseWarsMenu") host._lastMode = modeName;
+        if ( remember ) host._lastMode = modeName;
 
         foreach ( var child in host.PanelSwitcher.Children )
         {
