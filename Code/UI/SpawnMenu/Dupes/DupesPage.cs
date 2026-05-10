@@ -8,23 +8,6 @@ public class DupesPage : BaseSpawnMenu
 {
 	protected override void Rebuild()
 	{
-		AddHeader( "#spawnmenu.section.workshop" );
-		AddOption( "🎖️", "#spawnmenu.dupes.popular", () => new DupesWorkshop() { SortOrder = WorkshopSortMode.Popular } );
-		AddOption( "🐣", "#spawnmenu.dupes.newest", () => new DupesWorkshop() { SortOrder = WorkshopSortMode.Newest } );
-
-		AddHeader( "#spawnmenu.section.categories" );
-
-		foreach ( var entry in TypeLibrary.GetEnumDescription( typeof( DupeCategory ) ) )
-		{
-			AddOption( entry.Icon, entry.Title, () => new DupesWorkshop()
-			{
-				SortOrder = WorkshopSortMode.Popular,
-				Category = entry.Name.ToString()
-			} );
-		}
-
-
-		AddGrow();
 		AddHeader( "#spawnmenu.section.local" );
 		AddOption( "📂", "#spawnmenu.dupes.local", () => new DupesLocal() );
 	}

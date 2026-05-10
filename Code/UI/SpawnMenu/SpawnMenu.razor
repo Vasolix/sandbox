@@ -78,6 +78,8 @@
         {
             if (p.IsAbstract) continue;
             if (p.TargetType == typeof(BaseSpawnMenu)) continue;
+            if (p.TargetType == typeof(SpawnlistsPage)) continue;
+            if (p.TargetType == typeof(DupesPage)) continue;
 
             var panel = p.Create<Panel>();
             TabContainer.AddChild(panel);

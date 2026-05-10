@@ -93,30 +93,6 @@
             spawner.PopulateContextMenu( menu, Ident, Metadata );
         }
 
-        // If inside a spawnlist, offer removal
-        var spawnlistView = Ancestors.OfType<SpawnlistView>().FirstOrDefault();
-        if ( spawnlistView?.Entry is not null )
-        {
-            menu.AddOption( "delete", "Remove from List", () =>
-            {
-                var data = SpawnlistData.Load( spawnlistView.Entry );
-                var idx = data.Items.FindIndex( x => x.Ident == Ident );
-                if ( idx >= 0 )
-                {
-                    SpawnlistData.RemoveItem( spawnlistView.Entry, idx );
-                    spawnlistView.RefreshCache();
-                }
-            } );
-            menu.AddSpacer();
-        }
-
-        SpawnlistData.PopulateContextMenu( menu, new SpawnlistItem
-        {
-            Ident = Ident,
-            Title = Title,
-            Icon = Icon,
-        }, spawnlistView?.Entry );
-
         e.StopPropagation();
     }
 

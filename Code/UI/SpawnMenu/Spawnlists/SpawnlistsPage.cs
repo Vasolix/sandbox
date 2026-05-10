@@ -52,9 +52,6 @@ public class SpawnlistsPage : BaseSpawnMenu
 			AddSkeletons( Collection.PendingCount );
 		}
 
-		AddHeader( "#spawnmenu.section.workshop" );
-		AddOption( "🎖️", "#spawnmenu.spawnlist.popular", () => new SpawnlistWorkshop { SortOrder = WorkshopSortMode.Popular } );
-		AddOption( "🐣", "#spawnmenu.spawnlist.newest", () => new SpawnlistWorkshop { SortOrder = WorkshopSortMode.Newest } );
 	}
 
 	protected override void OnMenuFooter( Panel footer )

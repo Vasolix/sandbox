@@ -32,16 +32,5 @@ public class EntityPage : BaseSpawnMenu
 			AddOption( icon, cat, () => new EntityListLocal { Category = cat } );
 		}
 
-		AddHeader( "#spawnmenu.section.workshop" );
-		AddOption( "\U0001f9e0", "#spawnmenu.entity.all", () => new EntityListCloud() { Query = "" } );
-		AddOption( "🐵", "#spawnmenu.entity.animals", () => new EntityListCloud() { Query = "cat:animal" } );
-		AddOption( "🥁", "#spawnmenu.entity.audio", () => new EntityListCloud() { Query = "cat:audio" } );
-		AddOption( "✨", "#spawnmenu.entity.effect", () => new EntityListCloud() { Query = "cat:effect" } );
-		AddOption( "🥼", "#spawnmenu.entity.npc", () => new EntityListCloud() { Query = "cat:npc" } );
-		AddOption( "🎈", "#spawnmenu.entity.other", () => new EntityListCloud() { Query = "cat:other" } );
-		AddOption( "💪", "#spawnmenu.entity.showcase", () => new EntityListCloud() { Query = "cat:showcase" } );
-		AddOption( "🧸", "#spawnmenu.entity.toys_and_fun", () => new EntityListCloud() { Query = "cat:toyfun" } );
-		AddOption( "🚚", "#spawnmenu.entity.vehicle", () => new EntityListCloud() { Query = "cat:vehicle" } );
-		// AddOption( "⭐", "Favourites", () => new EntityListCloud() { Query = "sort:favourite" } );
 	}
 }
